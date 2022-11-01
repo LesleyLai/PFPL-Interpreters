@@ -1,0 +1,4 @@
+(executable
+ (public_name PFPL_interpreters)
+ (name main)
+ (libraries PFPL_interpreters))
