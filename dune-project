@@ -11,7 +11,7 @@
 
 (maintainers "Lesley Lai")
 
-(license LICENSE)
+(license MIT)
 
 (documentation https://url/to/documentation)
 
