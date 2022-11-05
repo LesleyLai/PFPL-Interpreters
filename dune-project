@@ -5,7 +5,7 @@
 (generate_opam_files true)
 
 (source
- (github username/reponame))
+ (github LesleyLai/PFPL-Interpreters))
 
 (authors "Lesley Lai")
 
@@ -19,7 +19,7 @@
  (name PFPL_interpreters)
  (synopsis "A short synopsis")
  (description "A longer description")
- (depends ocaml dune)
+ (depends base ocaml dune (alcotest :with-test))
  (tags
   (topics "to describe" your project)))
 

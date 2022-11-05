@@ -1,2 +1,4 @@
 (test
- (name PFPL_interpreters))
+ (name Test_e)
+ (libraries PFPL base alcotest)
+)

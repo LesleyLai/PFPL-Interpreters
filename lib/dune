@@ -1,2 +1,6 @@
+(include_subdirs unqualified)
+
 (library
- (name PFPL_interpreters))
+ (name PFPL)
+ (libraries base)
+)
