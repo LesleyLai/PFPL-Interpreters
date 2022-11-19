@@ -67,9 +67,13 @@ let step_tests =
      Times(Num 4, Num 2), Num 8, "4 * 2 -> 8";
      Times(Plus(Num 1, Num 2), Times(Num 1, Num 2)), Times(Num 3, Times(Num 1, Num 2)), "(1 + 2) * (1 * 2) -> 3 + (1 * 2)";
      Times(Num 3, Plus(Num 1, Num 2)), Times(Num 3, Num 3), "3 * (1 + 2) -> 3 * 3";
-     Cat(Str "x", Str "y"), Str "xy", "cat s1 s2";
+     Cat(Str "x", Str "y"), Str "xy", "cat(s1, s2) -> s1 ^ s2";
      Cat(Cat(Str "x", Str "y"), Cat(Str "z", Str "w")), Cat(Str "xy", Cat(Str "z", Str "w")), "cat e1 e2";
      Cat(Str "xy", Cat(Str "z", Str "w")), Cat(Str "xy", Str "zw"), "cat s1 e2";
+     Len(Str "Hello"), Num 5, "len(hello) -> 5";
+     Len(Cat(Str "xy", Str "zw")), Len(Str "xyzw"), "len(cat s1 s2) -> len(s1^s2)";
+     Let(Plus (Num 1, Num 2), "x", Plus (Var "x", Num 3)), Let(Num 3, "x", Plus(Var "x", Num 3)), "let x = 1 + 2 in x + 3 -> let x = 3 in x + 3";
+     Let(Num 3, "x", Plus(Var "x", Num 3)), Plus(Num 3, Num 3), "let x = 3 in x + 3 -> 3 + 3"
     ]
 
 let () =

@@ -49,6 +49,20 @@ let is_val =
   | Str _ -> true
   | _ -> false
 
+(* [e1/x]e2 *)
+let rec subst: expr -> var -> expr -> expr = fun e1 x e2 ->
+  match e2 with
+  | Num _ -> e2
+  | Str _ -> e2
+  | Plus (e1', e2') -> Plus (subst e1 x e1', subst e1 x e2')
+  | Times (e1', e2') -> Times (subst e1 x e1', subst e1 x e2')
+  | Cat (e1', e2') -> Cat (subst e1 x e1', subst e1 x e2')
+  | Len e' -> Len (subst e1 x e')
+  (* TODO: let *)
+  | Var x' when String.equal x x' -> e1
+  | Var _ -> e2
+  | _ -> e2
+
 let rec step expr =
   (* Assert that expr is well typed *)
   let () = assert (expr_typ expr |> Option.is_some) in
@@ -64,4 +78,8 @@ let rec step expr =
   | Cat (Str s1, Str s2) -> Str (s1 ^ s2)
   | Cat (Str s1, e2) -> Cat (Str s1, step e2)
   | Cat (e1, e2) -> Cat (step e1, e2)
-  | _ -> unimp "step"
+  | Len (Str s) -> Num (String.length s)
+  | Len e -> Len (step e)
+  | Let (e1, x, e2) when is_val e1 -> subst e1 x e2
+  | Let (e1, x, e2) -> Let ((step e1), x, e2)
+  | Var _ -> unimp "cannot step unbounded variable"
