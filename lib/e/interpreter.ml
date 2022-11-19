@@ -61,4 +61,7 @@ let rec step expr =
   | Times (Num n1, Num n2) -> Num (n1 * n2)
   | Times (Num n1, e2) -> Times (Num n1, step e2)
   | Times (e1, e2) -> Times (step e1, e2)
+  | Cat (Str s1, Str s2) -> Str (s1 ^ s2)
+  | Cat (Str s1, e2) -> Cat (Str s1, step e2)
+  | Cat (e1, e2) -> Cat (step e1, e2)
   | _ -> unimp "step"

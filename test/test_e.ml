@@ -66,7 +66,11 @@ let step_tests =
      Plus(Num 3, Plus(Num 1, Num 2)), Plus(Num 3, Num 3), "3 + (1 + 2) -> 3 + 3";
      Times(Num 4, Num 2), Num 8, "4 * 2 -> 8";
      Times(Plus(Num 1, Num 2), Times(Num 1, Num 2)), Times(Num 3, Times(Num 1, Num 2)), "(1 + 2) * (1 * 2) -> 3 + (1 * 2)";
-    Times(Num 3, Plus(Num 1, Num 2)), Times(Num 3, Num 3), "3 * (1 + 2) -> 3 * 3"]
+     Times(Num 3, Plus(Num 1, Num 2)), Times(Num 3, Num 3), "3 * (1 + 2) -> 3 * 3";
+     Cat(Str "x", Str "y"), Str "xy", "cat s1 s2";
+     Cat(Cat(Str "x", Str "y"), Cat(Str "z", Str "w")), Cat(Str "xy", Cat(Str "z", Str "w")), "cat e1 e2";
+     Cat(Str "xy", Cat(Str "z", Str "w")), Cat(Str "xy", Str "zw"), "cat s1 e2";
+    ]
 
 let () =
   let open Alcotest in
