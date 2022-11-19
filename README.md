@@ -4,4 +4,4 @@ This repository contains interpreters of mini-languages described by the book [P
 
 ## Implemented Languages
 ### E
-E is the expression language as described in Chapter 4 & Chapter 5.
+E (in `lib/e`) is the expression language as described in Chapter 4-7.

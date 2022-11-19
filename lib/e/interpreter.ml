@@ -42,3 +42,23 @@ and expr_typ_binop gamma lhs rhs lhs_expect rhs_expect rtype =
   Option.some_if (tau1 = lhs_expect && tau2 = rhs_expect) rtype
 
 let expr_typ = TypCtx.empty |> expr_typ
+
+let is_val =
+  function
+  | Num _ -> true
+  | Str _ -> true
+  | _ -> false
+
+let rec step expr =
+  (* Assert that expr is well typed *)
+  let () = assert (expr_typ expr |> Option.is_some) in
+  match expr with
+  | Num _ -> expr
+  | Str _ -> expr
+  | Plus (Num n1, Num n2) -> Num (n1 + n2)
+  | Plus (Num n1, e2) -> Plus (Num n1, step e2)
+  | Plus (e1, e2) -> Plus (step e1, e2)
+  | Times (Num n1, Num n2) -> Num (n1 * n2)
+  | Times (Num n1, e2) -> Times (Num n1, step e2)
+  | Times (e1, e2) -> Times (step e1, e2)
+  | _ -> unimp "step"

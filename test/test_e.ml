@@ -4,12 +4,15 @@ open! PFPL.E
 let typ =
   Alcotest.testable pp_typ ( Caml.(=) )
 
+let expr =
+  Alcotest.testable pp_expr ( Caml.(=) )
+
 let typ_checking_tests =
   let open Alcotest in
   Base.List.map ~f:
     (fun (expected, expr, text) ->
       test_case text `Quick (fun () ->
-          Alcotest.(check (option typ) text expected (expr_typ expr))))
+          Alcotest.(check (option typ) "same type" expected (expr_typ expr))))
     ([
       Some TNum, Num 42, "n: num";
       Some TStr, Str "x", "s: str";
@@ -41,8 +44,34 @@ let typ_checking_tests =
       Some TNum, Let (Str "e", "x", Let (Num 42, "x", Var "x")), "Proper handle shadowing";
     ])
 
+let is_val_tests =
+  let open Alcotest in
+  Base.List.map ~f:
+    (fun (expected, expr, text) ->
+      test_case text `Quick (fun () ->
+          Alcotest.(check bool) "same bool" expected (is_val expr)))
+    [true, Num 3, "Number literals are values";
+     true, Str "hello", "String literals are values";
+     false, (Plus (Num 3, Num 3)), "Plus expression is not a value"]
+
+(* Precondition: the expression e should be well typed *)
+let step_tests =
+  let open Alcotest in
+  Base.List.map ~f:
+    (fun (e, expected, text) ->
+    test_case text `Quick (fun () ->
+        Alcotest.(check expr) "same expr" expected (step e)))
+    [Plus(Num 1, Num 2), Num 3, "1 + 2 -> 3";
+     Plus(Plus(Num 1, Num 2), Plus(Num 1, Num 2)), Plus(Num 3, Plus(Num 1, Num 2)), "1 + 2 + (1 + 2) -> 3 + (1 + 2)";
+     Plus(Num 3, Plus(Num 1, Num 2)), Plus(Num 3, Num 3), "3 + (1 + 2) -> 3 + 3";
+     Times(Num 4, Num 2), Num 8, "4 * 2 -> 8";
+     Times(Plus(Num 1, Num 2), Times(Num 1, Num 2)), Times(Num 3, Times(Num 1, Num 2)), "(1 + 2) * (1 * 2) -> 3 + (1 * 2)";
+    Times(Num 3, Plus(Num 1, Num 2)), Times(Num 3, Num 3), "3 * (1 + 2) -> 3 * 3"]
+
 let () =
   let open Alcotest in
   run "Utils" [
-      "static-case", typ_checking_tests
+      "type checking", typ_checking_tests;
+      "is_val", is_val_tests;
+      "step", step_tests
     ]
