@@ -58,10 +58,13 @@ let rec subst: expr -> var -> expr -> expr = fun e1 x e2 ->
   | Times (e1', e2') -> Times (subst e1 x e1', subst e1 x e2')
   | Cat (e1', e2') -> Cat (subst e1 x e1', subst e1 x e2')
   | Len e' -> Len (subst e1 x e')
-  (* TODO: let *)
+  | Let (e1', x', e2') ->
+     if String.equal x x' then
+       Let (subst e1 x e1', x', e2')
+     else
+       Let (subst e1 x e1', x', subst e1 x e2')
   | Var x' when String.equal x x' -> e1
   | Var _ -> e2
-  | _ -> e2
 
 let rec step expr =
   (* Assert that expr is well typed *)

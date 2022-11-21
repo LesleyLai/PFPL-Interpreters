@@ -73,7 +73,11 @@ let step_tests =
      Len(Str "Hello"), Num 5, "len(hello) -> 5";
      Len(Cat(Str "xy", Str "zw")), Len(Str "xyzw"), "len(cat s1 s2) -> len(s1^s2)";
      Let(Plus (Num 1, Num 2), "x", Plus (Var "x", Num 3)), Let(Num 3, "x", Plus(Var "x", Num 3)), "let x = 1 + 2 in x + 3 -> let x = 3 in x + 3";
-     Let(Num 3, "x", Plus(Var "x", Num 3)), Plus(Num 3, Num 3), "let x = 3 in x + 3 -> 3 + 3"
+     Let(Num 3, "x", Plus(Var "x", Num 3)), Plus(Num 3, Num 3), "let x = 3 in x + 3 -> 3 + 3";
+     Let(Num 3, "y", Let(Num 6, "x", Times (Var "x", Var "y"))),
+     Let(Num 6, "x", Times (Var "x", Num 3)), "nested let";
+     Let(Num 3, "x", Let(Num 6, "x", Times (Var "x", Num 7))),
+     Let(Num 6, "x", Times (Var "x", Num 7)), "correctly implement shadowing"
     ]
 
 let () =
